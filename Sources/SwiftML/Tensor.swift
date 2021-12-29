@@ -14,13 +14,13 @@ public struct Tensor: CustomStringConvertible {
 	public struct Shape: Equatable {
 		
 		/// The length of the primary axis.
-		public let primaryAxis: Int
+		public internal(set) var primaryAxis: Int
 		
 		/// The length of the secondary axis.
-		public let secondaryAxis: Int
+		public internal(set) var secondaryAxis: Int
 		
 		/// The batch size.
-		public let batchSize: Int
+		public internal(set) var batchSize: Int
 		
 		/// The total number of elements in the tensor.
 		public var flatLength: Int {
