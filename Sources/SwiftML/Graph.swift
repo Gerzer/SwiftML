@@ -135,7 +135,7 @@ public class Graph {
 	/// - Parameters:
 	///   - inputTensor: The input tensor to the first layer.
 	///   - device: The device on which to execute the graph.
-	/// - Throws: ``InferenceError/incompatible``, ``InferenceError/untrained``, ``DeviceError/noGPUDetected``, ``DeviceError/noANEDetected``
+	/// - Throws: ``InferenceError/incompatible``, ``DeviceError/noGPUDetected``, ``DeviceError/noANEDetected``
 	/// - Returns: The output tensor from the last layer.
 	public func infer(from inputTensor: Tensor, on device: InferenceComputeDevice) throws -> Tensor {
 		for layer in self.layers {
@@ -143,15 +143,17 @@ public class Graph {
 				throw InferenceError.incompatible
 			}
 		}
-		guard let weightsContainer = self.weightsContainer else {
-			throw InferenceError.untrained
+		if self.weightsContainer == nil {
+			print("Warning: This graph has not yet been trained")
 		}
 		let internalDevice = try device.select()
 		let internalGraph = MLCGraph()
 		var internalTensors = [MLCTensor(shape: inputTensor.shape.shapeArray)]
 		var nextInputShape = inputTensor.shape
 		for layerIndex in self.layers.indices {
-			try self.layers[layerIndex].loadWeights(from: weightsContainer, at: layerIndex, on: internalDevice)
+			if let weightsContainer = self.weightsContainer {
+				try self.layers[layerIndex].loadWeights(from: weightsContainer, at: layerIndex, on: internalDevice)
+			}
 			self.layers[layerIndex].configure(inputShape: nextInputShape, on: internalDevice)
 			nextInputShape = self.layers[layerIndex].outputShape
 			let tensor = internalGraph.node(with: self.layers[layerIndex].internalLayer, sources: [internalTensors.last!])!

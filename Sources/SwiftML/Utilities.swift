@@ -23,7 +23,7 @@ public enum TrainingError: Error {
 
 public enum InferenceError: Error {
 	
-	case incompatible, untrained
+	case incompatible
 	
 }
 
