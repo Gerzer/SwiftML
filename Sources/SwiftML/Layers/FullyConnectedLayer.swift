@@ -53,11 +53,9 @@ public struct FullyConnectedLayer: Layer {
 		self.inputShape = inputShape
 		self.outputShape = Tensor.Shape(primaryAxis: self.outputSize, secondaryAxis: inputShape.secondaryAxis, batchSize: inputShape.batchSize)
 		if self.weights == nil {
-//			self.weights = MLCTensor(shape: [1, self.inputShape.primaryAxis * self.outputSize], randomInitializerType: .glorotUniform)
 			self.weights = MLCTensor(dataArray: self.weightsDataArray, shape: [1, self.inputShape.primaryAxis * self.outputSize], on: internalDevice)
 		}
 		if self.biases == nil {
-//			self.biases = MLCTensor(shape: [1, self.outputSize], fillWithData: 0, dataType: .float32)
 			self.biases = MLCTensor(dataArray: self.biasesDataArray, shape: [1, self.outputSize], on: internalDevice)
 		}
 		let descriptor = MLCConvolutionDescriptor(kernelSizes: (height: 1, width: 1), inputFeatureChannelCount: self.inputShape.primaryAxis, outputFeatureChannelCount: self.outputSize)
