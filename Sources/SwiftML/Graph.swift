@@ -135,9 +135,10 @@ public class Graph {
 	/// - Parameters:
 	///   - inputTensor: The input tensor to the first layer.
 	///   - device: The device on which to execute the graph.
+	///   - doIgnoreBatchSize: Whether to ignore all batch elements in the output tensor besides the first (*i.e.*, the batch element at index `0`).
 	/// - Throws: ``InferenceError/incompatible``, ``DeviceError/noGPUDetected``, ``DeviceError/noANEDetected``
 	/// - Returns: The output tensor from the last layer.
-	public func infer(from inputTensor: Tensor, on device: InferenceComputeDevice) throws -> Tensor {
+	public func infer(from inputTensor: Tensor, on device: InferenceComputeDevice, ignoreBatchSize doIgnoreBatchSize: Bool = true) throws -> Tensor {
 		for layer in self.layers {
 			if !layer.checkInferenceCompatibility(on: device) {
 				throw InferenceError.incompatible
@@ -175,7 +176,8 @@ public class Graph {
 		]
 		inferenceGraph.addInputs(inputs)
 		inferenceGraph.execute(inputsData: inputsData, batchSize: inputTensor.shape.batchSize, options: [.synchronous])
-		return try Tensor(from: internalOutputTensor).batchElements[0]
+		let outputTensor = try Tensor(from: internalOutputTensor)
+		return doIgnoreBatchSize ? outputTensor.batchElements[0] : outputTensor
 	}
 	
 }
