@@ -4,6 +4,7 @@
 
 ### Layers
 
+- ``ActivationLayer``
 - ``FullyConnectedLayer``
 - ``LSTMLayer``
 - ``SoftmaxLayer``
