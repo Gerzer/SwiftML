@@ -200,6 +200,7 @@ public struct Tensor: CustomStringConvertible {
 	}
 	
 	init(from internalTensor: MLCTensor) throws {
+		internalTensor.synchronizeData()
 		let count = internalTensor.descriptor.shape.reduce(1, *)
 		var flatData = [Float](repeating: 0, count: count)
 		let success = flatData.withUnsafeMutableBufferPointer { (pointer) in

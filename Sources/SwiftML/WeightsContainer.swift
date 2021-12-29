@@ -22,9 +22,6 @@ public struct WeightsContainer {
 	/// Stores the specified internal tensors in this container.
 	/// - Parameter internalTensors: The internal tensors to store.
 	public mutating func store(_ internalTensors: InternalTensors...) throws {
-//		for element in internalTensors {
-//			assert(element.synchronizeData())
-//		}
 		let newTensors = try internalTensors.flatMap { (element) in
 			return try element.getTensors()
 		}
