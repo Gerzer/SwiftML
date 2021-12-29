@@ -7,4 +7,5 @@
 - ``ActivationLayer``
 - ``FullyConnectedLayer``
 - ``LSTMLayer``
+- ``ReshapeLayer``
 - ``SoftmaxLayer``
